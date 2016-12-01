@@ -1,25 +1,18 @@
-import time
 import asyncio
 
 
-async def coro():
-    print('aqui')
+loop = asyncio.get_event_loop()
+
+async def sleep_a_little(t):
+    await asyncio.sleep(t)
+    print('Done sleeping', t)
 
 
-async def main(loop):
-    # print('registering callbacks')
-    # event_loop.call_later(0.2, callback, 1)
-    # event_loop.call_later(0.1, callback, 2)
-    # event_loop.call_soon(callback, 3)
+async def main_task():
+    for i in range(10):
+        loop.create_task(sleep_a_little(i/2))
+        await asyncio.sleep(0.001)
 
-    # await asyncio.sleep(2)
 
-    print('Done')
-
-event_loop = asyncio.get_event_loop()
-try:
-    print('entering event loop')
-    event_loop.run_until_complete(main(event_loop))
-finally:
-    print('closing event loop')
-    event_loop.close()
+loop.create_task(main_task())
+loop.run_forever()
